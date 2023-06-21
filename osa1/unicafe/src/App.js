@@ -7,17 +7,14 @@ const App = () => {
 
   const updateGood = () => {
     setGood(good + 1)
-    console.log('value of good', good)
   }
 
   const updateNeutral = () => {
     setNeutral(neutral + 1)
-    console.log('value of neutral', neutral)
   }
 
   const updateBad = () => {
     setBad(bad + 1)
-    console.log('value of bad', bad)
   }
 
   return (
@@ -43,15 +40,34 @@ const Statistics = ({good, neutral, bad}) => {
   const average = (good - bad) / all //keskiarvo (hyvä 1, neutraali 0, huono -1)
   const positive = good / all * 100 //positiivisten palautteiden prosenttiosuus
 
+  if (all === 0) {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
+
   return (
-    <div>
-      <div>good {good}</div>
-      <div>neutral {neutral}</div>
-      <div>bad {bad}</div>
-      <div>all {all}</div>
-      <div>average {average}</div>
-      <div>positive {positive}</div>
-    </div>
+    <table>
+      <StatisticsLine text="good" value={good} />
+      <StatisticsLine text="neutral" value={neutral} />
+      <StatisticsLine text="bad" value={bad} />
+      <StatisticsLine text="all" value={all} />
+      <StatisticsLine text="average" value={average} />
+      <StatisticsLine text="positive" value={positive} />
+    </table>
+  )
+}
+
+const StatisticsLine = ({text, value}) => {
+  return (
+    <tbody>
+      <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+      </tr>
+    </tbody>
   )
 }
   

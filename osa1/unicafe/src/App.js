@@ -43,6 +43,14 @@ const Statistics = ({good, neutral, bad}) => {
   const average = (good - bad) / all //keskiarvo (hyvä 1, neutraali 0, huono -1)
   const positive = good / all * 100 //positiivisten palautteiden prosenttiosuus
 
+  if (all === 0) {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
+
   return (
     <div>
       <div>good {good}</div>

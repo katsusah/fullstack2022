@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 const App = () => {
-  // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
@@ -40,13 +39,20 @@ const Button = ({handleClick, text}) => (
 )
 
 const Statistics = ({good, neutral, bad}) => {
+  const all = good + neutral + bad //kaikkien palautteiden määrä yhtenlaskettuna
+  const average = (good - bad) / all //keskiarvo (hyvä 1, neutraali 0, huono -1)
+  const positive = good / all * 100 //positiivisten palautteiden prosenttiosuus
+
   return (
     <div>
       <div>good {good}</div>
       <div>neutral {neutral}</div>
       <div>bad {bad}</div>
+      <div>all {all}</div>
+      <div>average {average}</div>
+      <div>positive {positive}</div>
     </div>
   )
 }
-
+  
 export default App

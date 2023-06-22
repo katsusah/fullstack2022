@@ -3,4 +3,4 @@
 Full Stack Open 2022 -harjoitukset
 -------------------------------------
 
-Tällä hetkellä sisältää harjoitukset: 0
+Tällä hetkellä sisältää harjoitukset osioista: 0 ja 1

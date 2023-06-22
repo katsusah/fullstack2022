@@ -5,7 +5,10 @@ const Course = ({ course }) => {
     <div>
         <Header name = {course.name} />
         <Content parts = {course.parts} />
-        <Total exercises = {course.parts.map(part => part.exercises)} />
+        <Total exercises = {course.parts.map(part => 
+            part.exercises
+            )}
+        />
     </div>
   )
 }
@@ -30,13 +33,10 @@ const Part = ({ name, exercises }) => {
 
 const Total = ({ exercises }) => {
   console.log(exercises)
-  let total = 0;
-  for (let i = 0; i < exercises.length; i++) {
-    total += exercises[i];
-    console.log('total', total)
-  }
-  
+  const total = exercises.reduce( (sum, currentValue) => {
+    console.log('what is happening', sum, currentValue)
+    return sum + currentValue })
   return <p><b>total of {total} exercises</b></p>
 }
-      
+
 export default Course

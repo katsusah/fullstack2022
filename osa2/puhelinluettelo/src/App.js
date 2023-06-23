@@ -2,9 +2,11 @@ import { useState } from 'react'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', id: 1 },
-    { name: 'Grace Hopper', id: 2 },
+    { name: 'Arto Hellas' },
+    { name: 'Grace Hopper'},
   ]) 
+
+  const names = persons.map(person => person.name)
 
   const [newName, setNewName] = useState('')
 
@@ -12,7 +14,14 @@ const App = () => {
     event.preventDefault()
     const nameObject = {
       name: newName,
-      id: persons.length + 1,
+    }
+
+    console.log('uusi nimi', newName)
+    console.log(persons.indexOf(newName));
+
+    if (names.indexOf(newName) !== -1) {
+      alert(`${newName} is already added to phonebook`) // ilmoittaa, jos nimi löytyy jo puhelinluettelosta
+      return
     }
 
     setPersons(persons.concat(nameObject))
@@ -42,7 +51,7 @@ const App = () => {
       <h2>Numbers</h2>
       <p>
         {persons.map(person =>
-          <li key={person.id}>{person.name}</li>
+          <li key={person.name}>{person.name}</li>
         )}
       </p>
     </div>

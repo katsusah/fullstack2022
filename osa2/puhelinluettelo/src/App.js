@@ -2,61 +2,70 @@ import { useState } from 'react'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' },
-    { name: 'Grace Hopper'},
+    { name: 'Arto Hellas',
+      number: '040-1231244' },
+    { name: 'Grace Hopper',
+      number: '0440123456' },
   ]) 
 
-  const names = persons.map(person => person.name)
-
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-  const addName = (event) => {
+  const handleNameChange = (event) => {
+    setNewName(event.target.value)
+  }
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
+
+  const addPerson = (event) => {
     event.preventDefault()
-    const nameObject = {
+    const personObject = {
       name: newName,
+      number: newNumber
     }
 
     console.log('uusi nimi', newName)
-    console.log(persons.indexOf(newName));
+    console.log('uusi numero', newNumber)
 
-    if (names.indexOf(newName) !== -1) {
+    if (persons.map(person => person.name).indexOf(newName) !== -1) {
       alert(`${newName} is already added to phonebook`) // ilmoittaa, jos nimi löytyy jo puhelinluettelosta
       return
     }
 
-    setPersons(persons.concat(nameObject))
+    setPersons(persons.concat(personObject))
     setNewName('')
-  }
-
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
+    setNewNumber('')
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
+      <form onSubmit={addPerson}>
         <div>
           name: <input
             value={newName}
             onChange={handleNameChange}
-        />
+          />
+        </div>
+        <div>
+          number: <input 
+            value={newNumber}
+            onChange={handleNumberChange}
+          />
         </div>
         <div>
           <button type="submit">add</button>
         </div>
-        <div>debug: {newName}</div>
       </form>
       <h2>Numbers</h2>
-      <p>
+      <ul>
         {persons.map(person =>
-          <li key={person.name}>{person.name}</li>
+          <li key={person.name}>{person.name} {person.number}</li>
         )}
-      </p>
+      </ul>
     </div>
   )
-
 }
 
 export default App

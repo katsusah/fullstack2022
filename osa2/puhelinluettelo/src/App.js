@@ -1,53 +1,68 @@
 import { useState } from 'react'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', id: 1 },
-    { name: 'Grace Hopper', id: 2 },
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ]) 
-
+  const [personsToShow, setPersonsToShow] = useState(persons)
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-  const addName = (event) => {
-    event.preventDefault()
-    const nameObject = {
-      name: newName,
-      id: persons.length + 1,
-    }
-
-    setPersons(persons.concat(nameObject))
-    setNewName('')
+  const showPersons = (event) => { // etsii tiedot henkilön nimen perusteella
+    const filterName = event.target.value
+    console.log(filterName)
+    const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterName.toLowerCase()))
+    setPersonsToShow(filteredPersons)
   }
 
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
+  const handleNameChange = (event) => { // lisää uuden nimen luetteloon
     setNewName(event.target.value)
   }
 
+  const handleNumberChange = (event) => { // lisää uuden numeron luetteloon
+    setNewNumber(event.target.value)
+  }
+
+  const addPerson = (event) => { // lisää henkilön tiedot
+    event.preventDefault()
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
+
+    console.log('uusi nimi', newName)
+    console.log('uusi numero', newNumber)
+    console.log('kaikki henkilöt', persons)
+
+    if (persons.map(person => person.name).indexOf(newName) !== -1) { // ilmoittaa, jos nimi löytyy jo puhelinluettelosta
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
+    setPersons(persons.concat(personObject))
+    setNewName('')
+    setNewNumber('')
+    setPersonsToShow(persons.concat(personObject))
+  }
+  
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input
-            value={newName}
-            onChange={handleNameChange}
-        />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-        <div>debug: {newName}</div>
-      </form>
-      <h2>Numbers</h2>
-      <p>
-        {persons.map(person =>
-          <li key={person.id}>{person.name}</li>
-        )}
-      </p>
+      <Filter showPersons={showPersons}/>
+      <h2>Add a new</h2>
+      <PersonForm persons={persons} addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+      <h2>Numbers</h2> 
+      <ul>
+        <Persons personsToShow={personsToShow} />
+      </ul>
     </div>
   )
-
 }
 
 export default App

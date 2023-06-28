@@ -22,38 +22,13 @@
     },
     {
       "name": "Tellervo",
-      "number": "123",
+      "number": "1234",
       "id": 5
     },
     {
-      "name": "Hellervo",
-      "number": "",
-      "id": 6
-    },
-    {
-      "name": "Hellervo",
-      "number": "",
-      "id": 7
-    },
-    {
-      "name": "Selmu",
-      "number": "",
-      "id": 8
-    },
-    {
-      "name": "Selmu",
-      "number": "",
-      "id": 9
-    },
-    {
-      "name": "Babab",
-      "number": "1232536939869",
+      "name": "Aulikki",
+      "number": "0401234567",
       "id": 10
-    },
-    {
-      "name": "Mammu",
-      "number": "12",
-      "id": 11
     }
   ]
 }

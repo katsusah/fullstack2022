@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
@@ -11,12 +11,11 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    personService
+      .getAll()
+        .then(initialPersons => {
+        setPersons(initialPersons)
+        setPersonsToShow(initialPersons)
       })
   }, [])
 
@@ -30,7 +29,6 @@ const App = () => {
   const handleNameChange = (event) => { // lisää uuden nimen luetteloon
     setNewName(event.target.value)
   }
-
   const handleNumberChange = (event) => { // lisää uuden numeron luetteloon
     setNewNumber(event.target.value)
   }
@@ -40,21 +38,18 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber
-    }
-
-    console.log('uusi nimi', newName)
-    console.log('uusi numero', newNumber)
-    console.log('kaikki henkilöt', persons)
-
-    if (persons.map(person => person.name).indexOf(newName) !== -1) { // ilmoittaa, jos nimi löytyy jo puhelinluettelosta
+    }  
+    if (persons.some(person => person.name === newName)) { // tarkistaa onko nimi jo luettelossa
       alert(`${newName} is already added to phonebook`)
-      return
+    } else {
+      personService // asettaa henkilön tiedot listaan
+        .create(personObject)
+          .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
-    setPersonsToShow(persons.concat(personObject))
   }
   
   return (

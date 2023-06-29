@@ -10,9 +10,9 @@ const App = () => {
   const [personsToShow, setPersonsToShow] = useState(persons)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [notificationMessage, setNotificationMessage] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
-  useEffect(() => {
+  useEffect(() => { // haetaan henkilöiden tiedot palvelimelta
     personService
       .getAll()
         .then(initialPersons => {
@@ -58,7 +58,7 @@ const App = () => {
     }
   }
 
-  const updatePerson = (id) => {
+  const updatePerson = (id) => { // päivittää henkilön tiedot
     const person = persons.find(p => p.id === id)
     const updatedPerson = { ...person, number: newNumber }
     if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
@@ -73,7 +73,7 @@ const App = () => {
             setNotificationMessage(null)
           }, 3000)
         })
-        .catch(error => {
+        .catch(error => { // antaa ilmoituksen virhetilanteesta
           setNotificationMessage(
             `Information of ${person.name} has already been removed from server`
           )
@@ -82,10 +82,6 @@ const App = () => {
           }, 3000)      
           setPersons(persons.filter(person => person.id !== id))
           setPersonsToShow(persons.filter(person => person.id !== id))
-          setNotificationMessage(`Deleted ${person.name}`)
-          setTimeout(() => {
-            setNotificationMessage(null)
-          }, 3000)
         })
     }
   }

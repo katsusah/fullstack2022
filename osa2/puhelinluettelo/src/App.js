@@ -3,14 +3,16 @@ import personService from './services/persons'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [personsToShow, setPersonsToShow] = useState(persons)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
-  useEffect(() => {
+  useEffect(() => { // haetaan henkilöiden tiedot palvelimelta
     personService
       .getAll()
         .then(initialPersons => {
@@ -21,7 +23,6 @@ const App = () => {
 
   const showPersons = (event) => { // etsii tiedot henkilön nimen perusteella
     const filterName = event.target.value
-    console.log(filterName)
     const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterName.toLowerCase()))
     setPersonsToShow(filteredPersons)
   }
@@ -49,11 +50,15 @@ const App = () => {
           setPersonsToShow(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setNotificationMessage(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 3000)
         })
     }
   }
 
-  const updatePerson = (id) => {
+  const updatePerson = (id) => { // päivittää henkilön tiedot
     const person = persons.find(p => p.id === id)
     const updatedPerson = { ...person, number: newNumber }
     if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
@@ -63,11 +68,18 @@ const App = () => {
           setPersonsToShow(persons.map(person => person.id !== id ? person : returnedPerson))
           setNewName('')
           setNewNumber('')
+          setNotificationMessage(`Updated ${returnedPerson.name}`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 3000)
         })
-        .catch(error => {
-          alert(
-            `the person '${person.name}' was already deleted from server`
+        .catch(error => { // antaa ilmoituksen virhetilanteesta
+          setNotificationMessage(
+            `Information of ${person.name} has already been removed from server`
           )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 3000)      
           setPersons(persons.filter(person => person.id !== id))
           setPersonsToShow(persons.filter(person => person.id !== id))
         })
@@ -82,6 +94,10 @@ const App = () => {
           .then(() => {
           setPersons(persons.filter(person => person.id !== id))
           setPersonsToShow(persons.filter(person => person.id !== id))
+          setNotificationMessage(`Deleted ${person.name}`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 3000)
         })
     }
   }
@@ -89,6 +105,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter showPersons={showPersons}/>
       <h2>Add a new</h2>
       <PersonForm persons={persons} addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />

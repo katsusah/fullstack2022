@@ -1,7 +1,15 @@
 const express = require('express')
 const app = express()
 
+const cors = require('cors')
+const morgan = require('morgan')
+
 app.use(express.json())
+app.use(cors())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(express.static('build'))
+
+morgan.token('body', function (request, response) { return JSON.stringify(request.body) })
 
 let persons = [
   {
@@ -58,8 +66,6 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  console.log(request.body)
-  console.log(request.headers)
 
   if (!body.name) {
     return response.status(400).json({
@@ -89,7 +95,7 @@ app.post('/api/persons', (request, response) => {
   response.json(person)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
